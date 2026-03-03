@@ -1,0 +1,67 @@
+# ==============================
+# 🐍 Python 通用忽略规则
+# ==============================
+
+# 虚拟环境（强烈建议！）
+venv/
+env/
+.venv/
+.env/
+ENV/
+
+# 字节码 & 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyi
+.Python
+pip-log.txt
+
+# IDE / 编辑器临时文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# 日志 & 输出
+*.log
+*.out
+*.err
+
+# 构建 & 分发产物
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb~
+
+# 测试与覆盖率
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# 环境变量与密钥（⚠️ 绝对不要提交！）
+.env
+.env.local
+.env.development
+.env.production
+secrets.py
+config/local.py
+
+# 其他常见
+.DS_Store
+Thumbs.db
+
+projects
+static
+templates
+testcase
+testrun
+testsuite
