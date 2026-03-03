@@ -1,0 +1,18 @@
+[
+    {
+        "id": "suite_1772523636221",
+        "name": "wcp",
+        "description": "test",
+        "testCaseIds": [],
+        "createdDate": "2026-03-03",
+        "updatedDate": "2026-03-03"
+    },
+    {
+        "id": "suite_1772523683396",
+        "name": "1111",
+        "description": "",
+        "testCaseIds": [],
+        "createdDate": "2026-03-03",
+        "updatedDate": "2026-03-03"
+    }
+]
