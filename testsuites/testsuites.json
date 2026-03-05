@@ -3,9 +3,13 @@
         "id": "suite_1772523636221",
         "name": "wcp",
         "description": "test",
-        "testCaseIds": [],
+        "testCaseIds": [
+            "tc_1772609810216",
+            "tc_1772612878667"
+        ],
         "createdDate": "2026-03-03",
-        "updatedDate": "2026-03-03"
+        "updatedDate": "2026-03-05",
+        "status": "archived"
     },
     {
         "id": "suite_1772523683396",
@@ -14,5 +18,14 @@
         "testCaseIds": [],
         "createdDate": "2026-03-03",
         "updatedDate": "2026-03-03"
+    },
+    {
+        "id": "suite_1772692342214",
+        "name": "X",
+        "description": "test",
+        "status": "active",
+        "testCaseIds": [],
+        "createdDate": "2026-03-05",
+        "updatedDate": "2026-03-05"
     }
 ]

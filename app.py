@@ -479,6 +479,116 @@ class DataProcessor:
             print(f"❌ 保存 voucher 失败：{str(e)}")
             return ResponseHandler.error(f"保存失败：{str(e)}", 500)
 
+
+    @staticmethod
+    def process_save_testcase(data):
+        try:
+            json_file_path = FileManager.get_directory_by_type('testcases') / 'testcases.json'
+
+            # 1️⃣ 尝试读取已有数据（若文件存在且可解析）
+            existing_data = []
+            if json_file_path.exists():
+                try:
+                    with open(json_file_path, 'r', encoding='utf-8') as f:
+                        existing_data = json.load(f)
+                        if not isinstance(existing_data, list):
+                            print(f"⚠️  警告：{json_file_path} 格式异常，重置为 []")
+                            existing_data = []
+                except (json.JSONDecodeError, OSError) as e:
+                    print(f"⚠️  读取旧数据失败（将清空重建）：{e}")
+                    existing_data = []
+
+            existing_data.append(data)
+
+            with open(json_file_path, 'w', encoding='utf-8') as f:
+                json.dump(existing_data, f, ensure_ascii=False, indent=4)
+
+            print(f"✅ JSON文件已保存")
+            return jsonify({
+                "code": 200,
+                "msg": "保存成功",
+            }), 200
+
+        except Exception as e:
+            print(f"❌ 保存 voucher 失败：{str(e)}")
+            return ResponseHandler.error(f"保存失败：{str(e)}", 500)
+
+
+    @staticmethod
+    def process_update_testcase(data):
+        try:
+            json_file_path = FileManager.get_directory_by_type('testcases') / 'testcases.json'
+
+            existing_data = []
+            if json_file_path.exists():
+                try:
+                    with open(json_file_path, 'r', encoding='utf-8') as f:
+                        existing_data = json.load(f)
+                        if not isinstance(existing_data, list):
+                            existing_data = []
+                except (json.JSONDecodeError, OSError) as e:
+                    existing_data = []
+
+            updated = False
+            for i, existing_item in enumerate(existing_data):
+                if existing_item.get('id') == data['id']:
+                    # 找到匹配的项目，进行更新
+                    existing_data[i].update(data)
+                    updated = True
+                    print(f"✅ 项目 ID {data['id']} 已更新: {existing_data[i]}")
+                    break
+
+
+            with open(json_file_path, 'w', encoding='utf-8') as f:
+                json.dump(existing_data, f, ensure_ascii=False, indent=4)
+
+            print(f"✅ JSON文件已保存")
+            return jsonify({
+                "code": 200,
+                "msg": "保存成功",
+            }), 200
+
+        except Exception as e:
+            print(f"❌ 保存 voucher 失败：{str(e)}")
+            return ResponseHandler.error(f"保存失败：{str(e)}", 500)
+
+
+    @staticmethod
+    def process_delete_testcase(testcase_id):
+        try:
+            json_file_path = FileManager.get_directory_by_type('testcases') / 'testcases.json'
+
+            existing_data = []
+            if json_file_path.exists():
+                try:
+                    with open(json_file_path, 'r', encoding='utf-8') as f:
+                        existing_data = json.load(f)
+                        if not isinstance(existing_data, list):
+                            existing_data = []
+                except (json.JSONDecodeError, OSError) as e:
+                    existing_data = []
+
+            for i, p in enumerate(existing_data):
+                if p["id"] == testcase_id:
+                    del existing_data[i]
+                    print(f"✅ Deleted project at index {i}")
+                    break
+            else:
+                print(f"⚠️  Project with id '{testcase_id}' not found.")
+
+            with open(json_file_path, 'w', encoding='utf-8') as f:
+                json.dump(existing_data, f, ensure_ascii=False, indent=4)
+
+            print(f"✅ JSON文件已保存")
+            return jsonify({
+                "code": 200,
+                "msg": "删除成功",
+            }), 200
+
+        except Exception as e:
+            print(f"❌ 保存 voucher 失败：{str(e)}")
+            return ResponseHandler.error(f"保存失败：{str(e)}", 500)
+
 class ResponseHandler:
     """响应处理器"""
 
@@ -805,6 +915,55 @@ def api_get_testcase():
     except Exception as e:
         return ResponseHandler.error(f"筛选失败：{str(e)}", 500)
 
+@app.route('/api/create_testcase', methods=['POST'])
+@jwt_required()
+def api_create_testcase():
+    current_user = get_jwt_identity()
+    jwt_data = get_jwt()
+
+    # 验证token是否过期
+    if jwt_data.get("exp") is None:
+        return ResponseHandler.error("Token已过期，请重新登录", 401)
+
+    try:
+        data = request.get_json()
+        return DataProcessor.process_save_testcase(data)
+
+    except Exception as e:
+        return ResponseHandler.error(f"筛选失败：{str(e)}", 500)
+
+@app.route('/api/update_testcase', methods=['PUT'])
+@jwt_required()
+def api_update_testcase():
+    current_user = get_jwt_identity()
+    jwt_data = get_jwt()
+
+    # 验证token是否过期
+    if jwt_data.get("exp") is None:
+        return ResponseHandler.error("Token已过期，请重新登录", 401)
+
+    try:
+        data = request.get_json()
+        return DataProcessor.process_update_testcase(data)
+
+    except Exception as e:
+        return ResponseHandler.error(f"筛选失败：{str(e)}", 500)
+
+@app.route('/api/delete_testcase/<testcase_id>', methods=['DELETE'])
+@jwt_required()
+def api_delete_testcase(testcase_id):
+    current_user = get_jwt_identity()
+    jwt_data = get_jwt()
+
+    # 验证token是否过期
+    if jwt_data.get("exp") is None:
+        return ResponseHandler.error("Token已过期，请重新登录", 401)
+
+    try:
+        return DataProcessor.process_delete_testcase(testcase_id)
+
+    except Exception as e:
+        return ResponseHandler.error(f"筛选失败：{str(e)}", 500)
 
 @app.route('/api/testsuites', methods=['GET'])
 @jwt_required()
