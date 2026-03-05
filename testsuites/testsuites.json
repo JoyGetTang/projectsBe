@@ -3,10 +3,7 @@
         "id": "suite_1772523636221",
         "name": "wcp",
         "description": "test",
-        "testCaseIds": [
-            "tc_1772609810216",
-            "tc_1772612878667"
-        ],
+        "testCaseIds": [],
         "createdDate": "2026-03-03",
         "updatedDate": "2026-03-05",
         "status": "archived"
@@ -17,7 +14,8 @@
         "description": "",
         "testCaseIds": [],
         "createdDate": "2026-03-03",
-        "updatedDate": "2026-03-03"
+        "updatedDate": "2026-03-03",
+        "status": "inactive"
     },
     {
         "id": "suite_1772692342214",

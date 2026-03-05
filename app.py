@@ -576,6 +576,7 @@ class DataProcessor:
             else:
                 print(f"⚠️  Project with id '{testcase_id}' not found.")
 
+            DataProcessor.process_delete_testcase_in_suite(testcase_id)
             with open(json_file_path, 'w', encoding='utf-8') as f:
                 json.dump(existing_data, f, ensure_ascii=False, indent=4)
 
@@ -588,6 +589,37 @@ class DataProcessor:
         except Exception as e:
             print(f"❌ 保存 voucher 失败：{str(e)}")
             return ResponseHandler.error(f"保存失败：{str(e)}", 500)
+
+
+    @staticmethod
+    def process_delete_testcase_in_suite(testcase_id):
+        try:
+            json_file_path = FileManager.get_directory_by_type('testsuites') / 'testsuites.json'
+
+            existing_data = []
+            if json_file_path.exists():
+                try:
+                    with open(json_file_path, 'r', encoding='utf-8') as f:
+                        existing_data = json.load(f)
+                        if not isinstance(existing_data, list):
+                            existing_data = []
+                except (json.JSONDecodeError, OSError) as e:
+                    existing_data = []
+
+            for suite in existing_data:
+                if 'testCaseIds' in suite and isinstance(suite['testCaseIds'], list):
+                    suite['testCaseIds'] = [tc_id for tc_id in suite['testCaseIds'] if tc_id != testcase_id]
+
+
+            with open(json_file_path, 'w', encoding='utf-8') as f:
+                json.dump(existing_data, f, ensure_ascii=False, indent=4)
+
+            print(f"✅ JSON文件已保存")
+
+        except Exception as e:
+            print(f"❌ 保存 voucher 失败：{str(e)}")
+            return ResponseHandler.error(f"保存失败：{str(e)}", 500)
+
 
 class ResponseHandler:
     """响应处理器"""
